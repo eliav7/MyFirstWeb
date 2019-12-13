@@ -1,0 +1,79 @@
+
+package com.johnbryce.comapny.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.johnbryce.comapny.beans.Employee;
+import com.johnbryce.comapny.service.CompanyService;
+
+@RestController
+@RequestMapping("/company")
+public class CompanyController {
+
+	@Autowired
+	CompanyService service;
+
+	@GetMapping("/getAll")
+	public List<Employee> getAllEmployess() {
+		return service.getEmployees();
+	}
+
+	@GetMapping("/getAll2")
+	public ResponseEntity<?> getAllEmployess2() {
+		return new ResponseEntity<List<Employee>>(service.getEmployees(), HttpStatus.OK);
+	}
+
+	// POST - addEmployee(Employee) : long Returns id
+	@PostMapping("addEmployee")
+	public ResponseEntity<?> addEmployee(@RequestBody Employee e) {
+		return new ResponseEntity<Long>(e.getId(), HttpStatus.OK);
+	}
+
+	// GET - getEmployee(long id) : Employee Path param
+	@GetMapping("getEmployee/{id}")
+	public Employee getEmployee(@PathVariable(name = "id") long id) {
+		return service.getEmployee(id);
+	}
+
+	//RESPONSE GET - getEmployee(long id) : Employee Path param
+	@GetMapping("getEmployee2/{id}")
+			public ResponseEntity<?> getEmployee2(@PathVariable (name ="id") long id) {
+				return new ResponseEntity<Employee>(service.getEmployee(id), HttpStatus.OK);
+			}
+
+	// GET - getEmployees() : List<Employees>
+	@GetMapping("getEmployees")
+	public List<Employee> getEmployees() {
+		return service.getEmployees();
+	}
+	
+	//RESPONSE GET - getEmployees() : List<Employees>
+	@GetMapping("getEmployees2")
+	public ResponseEntity<?> getEmployees2() {
+		return new ResponseEntity<List<Employee>> (service.getEmployees(),HttpStatus.OK);
+	}
+
+
+	// GET - getEmployees(String name) : List<Employees>;
+	@GetMapping("getEmployeesByName")
+	public List<Employee> getEmployeeByName(@RequestParam(name = "name") String name) {
+		return service.getEmployee(name);
+	}
+
+	//RESPONSE GET - getEmployees(String name) : List<Employees>;
+		@GetMapping("getEmployeesByName2")
+		public ResponseEntity<?> getEmployeeByName2(@RequestParam(name = "name") String name) {
+			return new ResponseEntity<List<Employee>>(getEmployeeByName(name),HttpStatus.OK);
+		}
+}
